@@ -1,10 +1,13 @@
 package dev.phiona.mycontacts
 
+import android.content.Intent
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.view.menu.MenuView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -20,6 +23,7 @@ class ContactsRvAdapter(var contactList: List<Contact>):RecyclerView.Adapter<Con
 
     override fun onBindViewHolder(holder: ContactsViewHolder, position: Int) {
         var currentContact=contactList.get(position)
+        val context=holder.itemView.context
         with(holder.binding){
             tvName.text=currentContact.name
             tvEmail.text=currentContact.email
@@ -32,6 +36,20 @@ class ContactsRvAdapter(var contactList: List<Contact>):RecyclerView.Adapter<Con
                 .placeholder(R.drawable.ic_baseline_person_24)
                 .error(R.drawable.ic_baseline_person_24)
                 .into(imgContact)
+
+            cvContacts.setOnClickListener{
+                val intent=Intent(context, ViewContact::class.java)
+                intent.putExtra("NAME",currentContact.name)
+                intent.putExtra("PHONE_NUMBER",currentContact.phone)
+                intent.putExtra("LOCATION",currentContact.address)
+                intent.putExtra("EMAIL",currentContact.email)
+                intent.putExtra("IMAGE",currentContact.image)
+                context.startActivity(intent)
+            }
+            holder.binding.imgContact.setOnClickListener{
+                Toast.makeText(context,"You have clicked on my face!",Toast.LENGTH_LONG)
+                    .show()
+            }
 
         }
     }
